@@ -66,10 +66,10 @@ class PostService(
 
     fun getPost(postId:Int): PostResponseDto {
         //TODO: findPost가 null일경우 예외처리를 해줘야함
-        val findPost = postRepository.findById(postId).orElse(null)
+        val findPost = getValidPost(postId)
 
         val hashTagResponseDtoList = mutableListOf<PostHashTagResponseDto>()
-        findPost?.postHashtag?.forEach{postHashTag ->
+        findPost.postHashtag?.forEach{postHashTag ->
             hashTagResponseDtoList.add(
                 PostHashTagResponseDto(
                     id = postHashTag.hashTag.hashTagId,
@@ -78,17 +78,17 @@ class PostService(
             )
         }
         val userResponse = UserResponseDto(
-            userId = findPost?.user?.userId,
-            name = findPost?.user?.name,
-            email = findPost?.user?.email,
-            createdAt = findPost?.user?.createdAt,
-            updatedAt = findPost?.user?.updatedAt
+            userId = findPost.user?.userId,
+            name = findPost.user?.name,
+            email = findPost.user?.email,
+            createdAt = findPost.user?.createdAt,
+            updatedAt = findPost.user?.updatedAt
         )
         return PostResponseDto(
             id = findPost.postId,
             title = findPost.title,
             content = findPost.content,
-            image = findPost?.postImage,
+            image = findPost.postImage,
             hashTag = hashTagResponseDtoList,
             user = userResponse
         )
