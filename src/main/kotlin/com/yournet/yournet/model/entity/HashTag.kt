@@ -13,8 +13,8 @@ class HashTag(
     var hashTagName: String,
 
     @OneToMany(mappedBy = "hashTag")
-    var postHashtag: MutableList<PostHashtag> = mutableListOf(),
+    var postHashtag: MutableList<PostHashTag> = mutableListOf(),
 
 
-): BaseEntity() {
+    ): BaseEntity() {
 }

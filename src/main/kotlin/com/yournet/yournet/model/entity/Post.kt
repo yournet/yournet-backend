@@ -1,12 +1,7 @@
 package com.yournet.yournet.model.entity
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.OneToMany
-import javax.persistence.OneToOne
+import com.fasterxml.jackson.annotation.JsonManagedReference
+import javax.persistence.*
 
 @Entity
 class Post(
@@ -24,10 +19,16 @@ class Post(
     var postImage: String?,
 
     @OneToMany(mappedBy = "post")
-    var postHashtag: MutableList<PostHashtag> = mutableListOf(),
+    var postHashtag: MutableList<PostHashTag>? = mutableListOf(),
 
     @OneToMany(mappedBy = "post")
-    var comment: MutableList<Comment> = mutableListOf(),
+    var comment: MutableList<Comment>? = mutableListOf(),
+
+    @ManyToOne
+    @JsonManagedReference
+    @JoinColumn(name = "user_id")
+    var user: User?,
+    //TODO: like 기능 추가
 
 ):BaseEntity() {
 }

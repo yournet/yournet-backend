@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import javax.persistence.*
 
 @Entity
-class PostHashtag(
+class PostHashTag(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var postId: Int = 0,
