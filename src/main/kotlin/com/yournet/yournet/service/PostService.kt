@@ -6,6 +6,10 @@ import com.yournet.yournet.model.payload.post.request.PostWriteRequestDto
 import com.yournet.yournet.model.payload.post.response.PostResponseDto
 import com.yournet.yournet.model.payload.posthashtag.response.PostHashTagResponseDto
 import com.yournet.yournet.repository.PostRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
 @Service
@@ -90,10 +94,17 @@ class PostService(
         )
     }
 
-    fun getPostsList(page:Int, size:Int): List<PostResponseDto> {
-        val findPosts = postRepository.findAll()
-        val postsList = mutableListOf<PostResponseDto>()
-        findPosts.forEach{post ->
+    fun getPostsList(page:Int, size:Int, sort:String?,hashtag:String?): List<PostResponseDto> {
+        val pageRequest: Pageable = PageRequest.of(page-1, size, Sort.Direction.DESC, sort)
+        val posts: Page<Post>
+        if(hashtag == null) {
+            posts = postRepository.findAll(pageRequest)
+        }else{
+            posts = postRepository.findAllByHashTagName(pageRequest, hashtag)
+
+        }
+        val postResponseDtoList = mutableListOf<PostResponseDto>()
+        posts.forEach{post ->
             val hashTagResponseDtoList = mutableListOf<PostHashTagResponseDto>()
             post.postHashtag?.forEach{postHashTag ->
                 hashTagResponseDtoList.add(
@@ -110,7 +121,7 @@ class PostService(
                 createdAt = post.user?.createdAt,
                 updatedAt = post.user?.updatedAt
             )
-            postsList.add(
+            postResponseDtoList.add(
                 PostResponseDto(
                     id = post.postId,
                     title = post.title,
@@ -121,6 +132,21 @@ class PostService(
                 )
             )
         }
-        return postsList
+        return postResponseDtoList
+    }
+
+    fun getValidPost(postId:Int): Post {
+        val findPost = postRepository.findById(postId).orElse(null)
+        return findPost ?: throw Exception("존재하지 않는 게시글입니다.")
+    }
+
+    fun updatePost(post: Post,jwt: String){
+        val findUser = userService.getValidUser(jwt)
+        if(post.user?.userId != findUser?.userId){
+            throw Exception("게시글 작성자가 아닙니다.")
+        }
+        postRepository.save(post)
+
+        //TODO: 저장하고 response 추가하기
     }
 }

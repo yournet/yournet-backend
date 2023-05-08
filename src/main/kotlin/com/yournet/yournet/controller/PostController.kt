@@ -38,8 +38,10 @@ class PostController(
     fun getPosts(
         @RequestParam("page") page:Int,
         @RequestParam("size") size:Int,
+        @RequestParam(required = false, defaultValue = "createdAt") sort:String?,
+        @RequestParam(required = false) hashTag:String?,
     ):ResponseEntity<List<PostResponseDto>> {
-        return ResponseEntity.ok(postService.getPostsList(page, size))
+        return ResponseEntity.ok(postService.getPostsList(page, size, sort, hashTag))
     }
 
 
