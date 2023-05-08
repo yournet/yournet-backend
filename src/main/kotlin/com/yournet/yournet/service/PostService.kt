@@ -89,4 +89,38 @@ class PostService(
             user = userResponse
         )
     }
+
+    fun getPostsList(page:Int, size:Int): List<PostResponseDto> {
+        val findPosts = postRepository.findAll()
+        val postsList = mutableListOf<PostResponseDto>()
+        findPosts.forEach{post ->
+            val hashTagResponseDtoList = mutableListOf<PostHashTagResponseDto>()
+            post.postHashtag?.forEach{postHashTag ->
+                hashTagResponseDtoList.add(
+                    PostHashTagResponseDto(
+                        id = postHashTag.hashTag.hashTagId,
+                        name = postHashTag.hashTag.hashTagName
+                    )
+                )
+            }
+            val userResponse = UserResponseDto(
+                userId = post.user?.userId,
+                name = post.user?.name,
+                email = post.user?.email,
+                createdAt = post.user?.createdAt,
+                updatedAt = post.user?.updatedAt
+            )
+            postsList.add(
+                PostResponseDto(
+                    id = post.postId,
+                    title = post.title,
+                    content = post.content,
+                    image = post.postImage,
+                    hashTag = hashTagResponseDtoList,
+                    user = userResponse
+                )
+            )
+        }
+        return postsList
+    }
 }

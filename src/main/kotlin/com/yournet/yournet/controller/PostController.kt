@@ -25,12 +25,22 @@ class PostController(
         return ResponseEntity.ok(postService.savePost(body, jwt))
     }
 
-    //특정 게시글 가져오기 api
+    //특정 게시글 가져오기 api 추천 api 적용을 어떻게할지 고민해야함
     @GetMapping("post/{postId}")
     fun getPost(
         @RequestParam("postId") postId:Int,
     ):ResponseEntity<PostResponseDto> {
         return ResponseEntity.ok(postService.getPost(postId))
     }
+
+    //게시글들 불러오기 api
+    @GetMapping("posts")
+    fun getPosts(
+        @RequestParam("page") page:Int,
+        @RequestParam("size") size:Int,
+    ):ResponseEntity<List<PostResponseDto>> {
+        return ResponseEntity.ok(postService.getPostsList(page, size))
+    }
+
 
 }
