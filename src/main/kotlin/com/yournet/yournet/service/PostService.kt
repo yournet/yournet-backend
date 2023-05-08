@@ -48,12 +48,43 @@ class PostService(
             createdAt = findUser?.createdAt,
             updatedAt = findUser?.updatedAt
         )
+        postRepository.save(savedPost)
 
         return PostResponseDto(
             id = savedPost.postId,
             title = savedPost.title,
             content = savedPost.content,
             image = savedPost.postImage,
+            hashTag = hashTagResponseDtoList,
+            user = userResponse
+        )
+    }
+
+    fun getPost(postId:Int): PostResponseDto {
+        //TODO: findPost가 null일경우 예외처리를 해줘야함
+        val findPost = postRepository.findById(postId).orElse(null)
+
+        val hashTagResponseDtoList = mutableListOf<PostHashTagResponseDto>()
+        findPost?.postHashtag?.forEach{postHashTag ->
+            hashTagResponseDtoList.add(
+                PostHashTagResponseDto(
+                    id = postHashTag.hashTag.hashTagId,
+                    name = postHashTag.hashTag.hashTagName
+                )
+            )
+        }
+        val userResponse = UserResponseDto(
+            userId = findPost?.user?.userId,
+            name = findPost?.user?.name,
+            email = findPost?.user?.email,
+            createdAt = findPost?.user?.createdAt,
+            updatedAt = findPost?.user?.updatedAt
+        )
+        return PostResponseDto(
+            id = findPost.postId,
+            title = findPost.title,
+            content = findPost.content,
+            image = findPost?.postImage,
             hashTag = hashTagResponseDtoList,
             user = userResponse
         )
