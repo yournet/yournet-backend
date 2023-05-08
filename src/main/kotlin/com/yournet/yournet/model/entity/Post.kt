@@ -26,5 +26,8 @@ class Post(
     @OneToMany(mappedBy = "post")
     var postHashtag: MutableList<PostHashtag> = mutableListOf(),
 
-) {
+    @OneToMany(mappedBy = "post")
+    var comment: MutableList<Comment> = mutableListOf(),
+
+):BaseEntity() {
 }
