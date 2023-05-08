@@ -182,4 +182,17 @@ class PostService(
             user = userResponse
         )
     }
+
+    fun deletePost(
+        postId: Int,
+        jwt: String
+    ) {
+        val findUser = userService.getValidUser(jwt)
+        val findPost = getValidPost(postId)
+        if(findPost.user?.userId != findUser?.userId){
+            throw Exception("게시글 작성자가 아닙니다.")
+        }
+        //TODO: 어드민일시 삭제 가능하게 하기
+        postRepository.delete(findPost)
+    }
 }

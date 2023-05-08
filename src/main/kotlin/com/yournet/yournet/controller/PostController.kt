@@ -4,6 +4,7 @@ import com.yournet.yournet.model.payload.post.request.PostWriteRequestDto
 import com.yournet.yournet.model.payload.post.response.PostResponseDto
 import com.yournet.yournet.service.PostService
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -52,6 +53,15 @@ class PostController(
         @RequestHeader("Authorization") jwt: String
     ):ResponseEntity<PostResponseDto> {
         return ResponseEntity.ok(postService.updatePost(postId, body, jwt))
+    }
+
+    @DeleteMapping("post/{postId}")
+    fun deletePost(
+        @RequestParam("postId") postId:Int,
+        @RequestHeader("Authorization") jwt: String
+    ):ResponseEntity<String> {
+        postService.deletePost(postId, jwt)
+        return ResponseEntity.ok("delete success")
     }
 
 
