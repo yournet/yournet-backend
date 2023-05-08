@@ -1,6 +1,7 @@
 package com.yournet.yournet.service
 
 import com.yournet.yournet.model.entity.Post
+import com.yournet.yournet.model.payload.auth.response.UserResponseDto
 import com.yournet.yournet.model.payload.post.request.PostWriteRequestDto
 import com.yournet.yournet.model.payload.post.response.PostResponseDto
 import com.yournet.yournet.model.payload.posthashtag.response.PostHashTagResponseDto
@@ -40,12 +41,21 @@ class PostService(
                 )
             )
         }
+        val userResponse = UserResponseDto(
+            userId = findUser?.userId,
+            name = findUser?.name,
+            email = findUser?.email,
+            createdAt = findUser?.createdAt,
+            updatedAt = findUser?.updatedAt
+        )
+
         return PostResponseDto(
             id = savedPost.postId,
             title = savedPost.title,
             content = savedPost.content,
             image = savedPost.postImage,
-            hashTag = hashTagResponseDtoList
+            hashTag = hashTagResponseDtoList,
+            user = userResponse
         )
     }
 }
