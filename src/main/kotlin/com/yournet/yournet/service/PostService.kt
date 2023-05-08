@@ -140,13 +140,46 @@ class PostService(
         return findPost ?: throw Exception("존재하지 않는 게시글입니다.")
     }
 
-    fun updatePost(post: Post,jwt: String){
+    fun updatePost(
+        postId: Int,
+        body:PostWriteRequestDto,
+        jwt: String
+    ): PostResponseDto{
         val findUser = userService.getValidUser(jwt)
-        if(post.user?.userId != findUser?.userId){
+        val findPost = getValidPost(postId)
+        if(findPost.user?.userId != findUser?.userId){
             throw Exception("게시글 작성자가 아닙니다.")
         }
-        postRepository.save(post)
+        findPost.title = body.title
+        findPost.content = body.content
+        findPost.postImage = body.image
 
+        postRepository.save(findPost)
+
+        val hashTagResponseDtoList = mutableListOf<PostHashTagResponseDto>()
+        findPost.postHashtag?.forEach{postHashTag ->
+            hashTagResponseDtoList.add(
+                PostHashTagResponseDto(
+                    id = postHashTag.hashTag.hashTagId,
+                    name = postHashTag.hashTag.hashTagName
+                )
+            )
+        }
+        val userResponse = UserResponseDto(
+            userId = findPost.user?.userId,
+            name = findPost.user?.name,
+            email = findPost.user?.email,
+            createdAt = findPost.user?.createdAt,
+            updatedAt = findPost.user?.updatedAt
+        )
         //TODO: 저장하고 response 추가하기
+        return PostResponseDto(
+            id = findPost.postId,
+            title = findPost.title,
+            content = findPost.content,
+            image = findPost.postImage,
+            hashTag = hashTagResponseDtoList,
+            user = userResponse
+        )
     }
 }

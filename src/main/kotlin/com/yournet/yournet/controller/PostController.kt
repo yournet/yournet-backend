@@ -5,6 +5,7 @@ import com.yournet.yournet.model.payload.post.response.PostResponseDto
 import com.yournet.yournet.service.PostService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -42,6 +43,15 @@ class PostController(
         @RequestParam(required = false) hashTag:String?,
     ):ResponseEntity<List<PostResponseDto>> {
         return ResponseEntity.ok(postService.getPostsList(page, size, sort, hashTag))
+    }
+
+    @PatchMapping("post/{postId}")
+    fun updatePost(
+        @RequestParam("postId") postId:Int,
+        @RequestBody body: PostWriteRequestDto,
+        @RequestHeader("Authorization") jwt: String
+    ):ResponseEntity<PostResponseDto> {
+        return ResponseEntity.ok(postService.updatePost(postId, body, jwt))
     }
 
 
