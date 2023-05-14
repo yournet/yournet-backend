@@ -14,13 +14,6 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-import org.pcap4j.core.Pcaps
-import org.pcap4j.packet.IpV4Packet
-import org.pcap4j.packet.Packet
-import org.pcap4j.packet.TcpPacket
-import org.pcap4j.packet.UdpPacket
-import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode
-import org.pcap4j.core.PcapNetworkInterface
 
 
 import io.swagger.v3.oas.annotations.Operation
