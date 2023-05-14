@@ -27,6 +27,10 @@ import pcap.spi.exception.TimeoutException
 import pcap.spi.exception.error.BreakException
 import pcap.spi.option.DefaultLiveOptions
 
+import org.pcap4j.core.PcapNetworkInterface
+import org.pcap4j.util.NifSelector
+import java.io.IOException
+
 @RestController
 class PostController(
     private val postService: PostService
@@ -34,46 +38,15 @@ class PostController(
 
     @GetMapping("packet")
     fun getPacket(): ResponseEntity<String> {
-        val service = Service.Creator.create("PcapService")
-        val devices: Iterator<Interface> = service.interfaces().iterator()
-        while (devices.hasNext()) {
-            val device = devices.next()
-            println("Name             : " + device.name())
-            println("Description      : " + device.description())
-            println("Flags            : " + device.flags())
-            if (device.addresses() != null) {
-                println("Addresses        : ")
-                val addresses: Iterator<Address> = device.addresses().iterator()
-                while (addresses.hasNext()) {
-                    val address: Address = addresses.next()
-                    System.out.println("\tAddress      : " + address.address())
-                    System.out.println("\tNetmask      : " + address.netmask())
-                    System.out.println("\tBroadcast    : " + address.broadcast())
-                    System.out.println("\tDestination  : " + address.destination())
-                }
-            }
-            println()
+
+        var device: PcapNetworkInterface? = null
+        try {
+            device = NifSelector().selectNetworkInterface()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
 
-        val pcap = service.live(service.interfaces(), DefaultLiveOptions())
-        pcap.setFilter("icmp", true)
-        val header = pcap.allocate(PacketHeader::class.java)
-        val buffer = pcap.allocate(PacketBuffer::class.java)
-        for (i in 0..9) {
-            try {
-                pcap.nextEx(header, buffer)
-                println("Header   : $header")
-                println("Packet   : $buffer")
-                val stats = pcap.stats()
-                println("Stats    : $stats")
-            } catch (e: BreakException) {
-                System.err.println(e.message)
-            } catch (e: TimeoutException) {
-                System.err.println(e.message)
-            }
-        }
-        pcap.close()
-
+        println("You chose: $device")
 
 
         return ResponseEntity.ok("packet printed on console")
