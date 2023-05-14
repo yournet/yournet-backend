@@ -22,11 +22,61 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import org.pcap4j.core.BpfProgram
+import org.pcap4j.core.PacketListener
+import org.pcap4j.core.PcapNetworkInterface
+import org.pcap4j.core.Pcaps
+import org.pcap4j.packet.Packet
 
 @RestController
 class PostController(
     private val postService: PostService
 ) {
+
+    @GetMapping("capture")
+    fun capturePackets(): ResponseEntity<String> {
+        val networkInterfaces: List<PcapNetworkInterface> = selectNetworkInterfaces()
+        if (networkInterfaces.isEmpty()) {
+            return ResponseEntity.badRequest().body("No network interface found.")
+        }
+
+        val handle: PcapHandle = openPcapHandle(networkInterfaces[0]) ?: return ResponseEntity.internalServerError().body("Failed to open Pcap handle.")
+
+        try {
+            val packetListener = PacketListener() { packet: Packet ->
+                println("Received packet: $packet")
+            }
+            handle.loop(-1, packetListener)
+
+            return ResponseEntity.ok("Packet capture completed.")
+        } catch (e: Exception) {
+            return ResponseEntity.internalServerError().body("Error capturing packets: ${e.message}")
+        } finally {
+            handle.close()
+        }
+    }
+
+    private fun selectNetworkInterfaces(): List<PcapNetworkInterface> {
+        return Pcaps.findAllDevs()
+    }
+
+    private fun openPcapHandle(networkInterface: PcapNetworkInterface): PcapHandle? {
+        val handle: PcapHandle = networkInterface.openLive(65536, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, 10)
+        handle.setFilter("tcp port 80", BpfProgram.BpfCompileMode.OPTIMIZE)
+        return handle
+    }
+
+    // pacap4j test를 위한 api
+    @Operation(summary = "pacap4j test를 위한 api")
+    @PostMapping("pcap")
+    fun pcapTest(
+        @Parameter(description = "pcap4j test를 위한 api", required = true)
+        @RequestBody body: String
+    ): ResponseEntity<String> {
+        val handle: PcapHandle = PcapHandle.Builder("en0").build()
+        println(handle)
+        return ResponseEntity.ok("pcap4j test")
+    }
 
     //게시글 작성 api
     @Operation(summary = "게시글 작성 API")
