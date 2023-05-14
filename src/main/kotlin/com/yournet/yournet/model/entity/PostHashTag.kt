@@ -7,7 +7,7 @@ import javax.persistence.*
 class PostHashTag(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var postId: Int = 0,
+    var postHashTagId: Int = 0,
 
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="hashTagId")
