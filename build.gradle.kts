@@ -49,6 +49,9 @@ dependencies {
     implementation("com.amazonaws:aws-java-sdk-core:1.12.385")
     implementation("com.amazonaws:aws-java-sdk-s3:1.12.385")
 
+    //kafka
+    implementation("org.springframework.kafka:spring-kafka")
+
 }
 
 tasks.withType<KotlinCompile> {
