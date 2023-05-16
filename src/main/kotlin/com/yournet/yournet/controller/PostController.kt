@@ -34,40 +34,33 @@ class PostController(
 
     @GetMapping("/capture")
     fun capturePackets(): ResponseEntity<String> {
-        //패킷관련 코드 추가
         try {
-            // 네트워크 인터페이스를 가져옵니다.
-            val addr: InetAddress = InetAddress.getLocalHost()
-            val nif: PcapNetworkInterface = Pcaps.getDevByAddress(addr) ?: throw IOException("no such device")
+            val channel = DatagramChannel.open()
+            channel.socket().bind(null)
 
-            val snapLen = 65536
-            val mode: PromiscuousMode = PromiscuousMode.PROMISCUOUS
-            val timeout = 10
-            val handle: PcapHandle = nif.openLive(snapLen, mode, timeout)
+            val buffer = ByteBuffer.allocate(1024)
 
-            // 패킷을 캡처하고 필요한 정보를 출력합니다.
-            while (true) {
-                val packet: Packet = handle.nextPacketEx
-                val tcpPacket: TcpPacket? = packet.get(TcpPacket::class.java)
-                if (tcpPacket != null) {
-                    val srcAddr: Inet4Address? = packet.get(IpV4Packet::class.java)?.header?.srcAddr
-                    val dstAddr: Inet4Address? = packet.get(IpV4Packet::class.java)?.header?.dstAddr
-                    println("Source IP: $srcAddr, Destination IP: $dstAddr")
-                    println("TCP Packet: $packet")
-                    break
-                }
-            }
+            // 패킷을 수신합니다.
+            val address = channel.receive(buffer) as InetSocketAddress
 
-            handle.close()
+            // 수신한 패킷의 정보를 출력합니다.
+            val sourceAddress = address.address.hostAddress
+            val sourcePort = address.port
+            val data = ByteArray(buffer.remaining())
+            buffer.get(data)
+
+            println("Source IP: $sourceAddress")
+            println("Source Port: $sourcePort")
+            println("Packet Data: ${String(data)}")
+
+            channel.close()
 
             return ResponseEntity.ok("Packet capture completed")
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             e.printStackTrace()
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to capture packet")
         }
     }
-
-
 
 
     //게시글 작성 api
