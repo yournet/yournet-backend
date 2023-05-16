@@ -52,12 +52,6 @@ dependencies {
     //pcap4j
     implementation("org.pcap4j:pcap4j-core:1.7.4")
 
-    //pcap
-    implementation("com.ardikars.pcap:pcap-jdk7")
-
-    //log4j2
-    implementation("org.springframework.boot:spring-boot-starter-log4j2")
-
 
     //kafka
     implementation("org.springframework.kafka:spring-kafka")
@@ -73,10 +67,4 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-dependencyManagement {
-    imports {
-        mavenBom("com.ardikars.pcap:pcap:1.4.2")
-    }
 }

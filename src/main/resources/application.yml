@@ -3,7 +3,7 @@ spring:
     active: prod
     include: secret
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: 152.67.212.109:9092
     consumer:
       group-id: petition-group
       auto-offset-reset: earliest
