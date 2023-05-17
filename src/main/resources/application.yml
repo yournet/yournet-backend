@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: local
     include: secret
   kafka:
     bootstrap-servers: 152.67.212.109:9092

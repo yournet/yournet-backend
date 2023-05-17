@@ -22,6 +22,9 @@ class PostService(
         body:PostWriteRequestDto,
         jwt:String
     ): PostResponseDto {
+
+
+
         val findUser = userService.getValidUser(jwt)
         val post = Post(
             title = body.title,

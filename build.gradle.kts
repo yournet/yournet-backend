@@ -56,6 +56,12 @@ dependencies {
     //kafka
     implementation("org.springframework.kafka:spring-kafka")
 
+    implementation ("com.ardikars.pcap:pcap-jdk7")
+    // https://mvnrepository.com/artifact/com.ardikars.pcap/pcap-spring-boot-starter
+    implementation("com.ardikars.pcap:pcap-spring-boot-starter:0.0.10")
+
+
+
 }
 
 tasks.withType<KotlinCompile> {
@@ -67,4 +73,8 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+dependencyManagement {
+    imports { mavenBom("com.ardikars.pcap:pcap:1.4.0") }
 }

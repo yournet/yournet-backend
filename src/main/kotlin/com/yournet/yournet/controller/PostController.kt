@@ -11,56 +11,20 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.pcap4j.core.*
-import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode
-import org.pcap4j.packet.IpV4Packet
-import org.pcap4j.packet.Packet
-import org.pcap4j.packet.TcpPacket
-import org.springframework.http.HttpStatus
+
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.io.IOException
-import java.net.Inet4Address
-import java.net.InetAddress
-import java.net.InetSocketAddress
+import pcap.spi.*
+import pcap.spi.exception.ErrorException
+import pcap.spi.exception.error.BreakException
+import pcap.spi.option.DefaultLiveOptions
+import java.net.http.HttpRequest
 
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
-import java.nio.channels.SocketChannel
 
 @RestController
 class PostController(
     private val postService: PostService
 ) {
-
-    @GetMapping("/capture")
-    fun capturePackets(): ResponseEntity<String> {
-        try {
-            val channel = DatagramChannel.open()
-            channel.socket().bind(null)
-
-            val buffer = ByteBuffer.allocate(1024)
-
-            // 패킷을 수신합니다.
-            val address = channel.receive(buffer) as InetSocketAddress
-
-            // 수신한 패킷의 정보를 출력합니다.
-            val sourceAddress = address.address.hostAddress
-            val sourcePort = address.port
-            val data = ByteArray(buffer.remaining())
-            buffer.get(data)
-
-            println("Source IP: $sourceAddress")
-            println("Source Port: $sourcePort")
-            println("Packet Data: ${String(data)}")
-
-            channel.close()
-
-            return ResponseEntity.ok("Packet capture completed")
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to capture packet")
-        }
-    }
 
 
     //게시글 작성 api
