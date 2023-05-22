@@ -34,6 +34,9 @@ class User(
     var petitions: MutableList<Petition> = mutableListOf(),
     */
 
+    @Column(nullable = true)
+    var registeredIP: String? = null,
+
 ) : BaseEntity() {
 
     init {

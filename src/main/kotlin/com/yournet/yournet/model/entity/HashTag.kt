@@ -15,6 +15,9 @@ class HashTag(
     @OneToMany(mappedBy = "hashTag")
     var postHashtag: MutableList<PostHashTag> = mutableListOf(),
 
+    @OneToMany(mappedBy = "hashTag")
+    var userScoreHashtag: MutableList<UserScoreHashTag> = mutableListOf(),
+
 
     ): BaseEntity() {
 }
