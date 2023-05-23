@@ -44,7 +44,7 @@ class PostService(
         postHashTags?.forEach{postHashTag ->
 
             //점수 측정 진행
-            userScoreHashTagService.updateScore(jwt,postHashTag.hashTag.hashTagName)
+            userScoreHashTagService.updateScoreOnPostSave(jwt,postHashTag.hashTag.hashTagName)
 
 
             hashTagResponseDtoList.add(

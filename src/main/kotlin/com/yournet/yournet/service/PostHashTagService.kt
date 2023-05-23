@@ -28,6 +28,7 @@ class PostHashTagService(
                         post = post,
                         hashTag = findHashTag
                     )
+                    postHashTagRepository.save(newPostHashTag)
                     postHashTagList.add(newPostHashTag)
 
                 }else{ //해시태그가 존재하지 않으면 해시태그,포스트해시태그 테이블에 저장
@@ -40,6 +41,7 @@ class PostHashTagService(
                         post = post,
                         hashTag = newHashTag
                     )
+                    postHashTagRepository.save(newPostHashTag)
                     postHashTagList.add(newPostHashTag)
                 }
             }
