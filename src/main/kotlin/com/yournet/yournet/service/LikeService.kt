@@ -20,6 +20,9 @@ class LikeService(
                 postId = body.postId
             )
             val savedLike = likeRepository.save(like)
+
+            //TODO: 점수 평가 로직 추가
+            //hashtag like 증가
             return LikeResponseDto(savedLike.likeId , savedLike.userId, savedLike.postId)
         }
         throw Exception("Invalid reqeust")

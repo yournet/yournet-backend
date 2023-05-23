@@ -18,7 +18,9 @@ import pcap.spi.*
 import pcap.spi.exception.ErrorException
 import pcap.spi.exception.error.BreakException
 import pcap.spi.option.DefaultLiveOptions
+import java.io.BufferedReader
 import java.net.http.HttpRequest
+import javax.servlet.http.HttpServletRequest
 
 
 @RestController
@@ -43,10 +45,13 @@ class PostController(
     @PostMapping("post")
     fun writePost(
         @Parameter(description = "게시글 작성 정보", required = true) @RequestBody body: PostWriteRequestDto,
-        @RequestHeader("Authorization") jwt: String
+        @RequestHeader("Authorization") jwt: String,
+        request: HttpServletRequest
     ): ResponseEntity<PostResponseDto> {
+
         return ResponseEntity.ok(postService.savePost(body, jwt))
     }
+
 
     // 특정 게시글 가져오기 API
     @Operation(summary = "특정 게시글 가져오기 API")
@@ -120,6 +125,14 @@ class PostController(
         ) @RequestBody body: PostWriteRequestDto, @RequestHeader("Authorization") jwt: String
     ): ResponseEntity<PostResponseDto> {
         return ResponseEntity.ok(postService.updatePost(postId, body, jwt))
+    }
+
+    @GetMapping("post/recommended")
+    @Operation(summary = "추천 게시글 조회 API")
+    fun getRecommendedPost(
+        @RequestHeader("Authorization") jwt: String
+    ): ResponseEntity<*>{
+        return ResponseEntity.ok(postService.getRecommendedPost(jwt))
     }
 
 }

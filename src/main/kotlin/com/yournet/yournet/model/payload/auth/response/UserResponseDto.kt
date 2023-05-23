@@ -6,6 +6,7 @@ data class UserResponseDto(
     val userId: Int?,
     val name: String?,
     val email: String?,
+    val userIP: String?,
     val createdAt: LocalDateTime?,
     val updatedAt: LocalDateTime?
 )

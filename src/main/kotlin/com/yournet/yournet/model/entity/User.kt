@@ -27,6 +27,8 @@ class User(
     @Column(nullable = true)
     var roleFlag: RoleFlag = RoleFlag.USER,
 
+    @Column(nullable = true)
+    var userIp:String = "",
     /*
     //이런식으로 게시글 조인하면 될듯
     @JsonBackReference //순환참조 방지

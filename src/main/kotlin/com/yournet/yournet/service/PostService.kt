@@ -17,6 +17,7 @@ class PostService(
     private val postRepository: PostRepository,
     private val userService: UserService,
     private val postHashTagService: PostHashTagService,
+    private val userScoreHashTagService: UserScoreHashTagService
 ) {
     fun savePost(
         body:PostWriteRequestDto,
@@ -41,6 +42,11 @@ class PostService(
 
         val hashTagResponseDtoList = mutableListOf<PostHashTagResponseDto>()
         postHashTags?.forEach{postHashTag ->
+
+            //점수 측정 진행
+            userScoreHashTagService.updateScore(jwt,postHashTag.hashTag.hashTagName)
+
+
             hashTagResponseDtoList.add(
                 PostHashTagResponseDto(
                     id = postHashTag.hashTag.hashTagId,
@@ -52,6 +58,7 @@ class PostService(
             userId = findUser?.userId,
             name = findUser?.name,
             email = findUser?.email,
+            userIP = findUser?.userIp,
             createdAt = findUser?.createdAt,
             updatedAt = findUser?.updatedAt
         )
@@ -84,6 +91,7 @@ class PostService(
             userId = findPost.user?.userId,
             name = findPost.user?.name,
             email = findPost.user?.email,
+            userIP = findPost.user?.userIp,
             createdAt = findPost.user?.createdAt,
             updatedAt = findPost.user?.updatedAt
         )
@@ -121,6 +129,7 @@ class PostService(
                 userId = post.user?.userId,
                 name = post.user?.name,
                 email = post.user?.email,
+                userIP = post.user?.userIp,
                 createdAt = post.user?.createdAt,
                 updatedAt = post.user?.updatedAt
             )
@@ -172,6 +181,7 @@ class PostService(
             userId = findPost.user?.userId,
             name = findPost.user?.name,
             email = findPost.user?.email,
+            userIP = findPost.user?.userIp,
             createdAt = findPost.user?.createdAt,
             updatedAt = findPost.user?.updatedAt
         )
@@ -197,5 +207,13 @@ class PostService(
         }
         //TODO: 어드민일시 삭제 가능하게 하기
         postRepository.delete(findPost)
+    }
+
+    fun getRecommendedPost(
+        jwt: String
+    ){
+        val findUser = userService.getValidUser(jwt)
+        //TODO: 추천 게시글 로직 구현
+        //flask api를 통해 추천 게시글을 가져온다.
     }
 }

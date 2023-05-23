@@ -18,17 +18,22 @@ import javax.servlet.http.HttpServletResponse
 class UserService(
     private val userRepository: UserRepository
 ) {
-    fun saveUser(body: RegisterRequestDto): UserResponseDto {
+    fun saveUser(
+        body: RegisterRequestDto,
+        clientIp: String
+    ): UserResponseDto {
         val user = User(
             password = body.password,
             name = body.name,
             email = body.email,
+            userIp = clientIp
         )
         val savedUser = userRepository.save(user)
         val responseDto = UserResponseDto(
             userId = savedUser.userId,
             name = user.name,
             email = user.email,
+            userIP = user.userIp,
             createdAt = user.createdAt,
             updatedAt = user.updatedAt
         )
