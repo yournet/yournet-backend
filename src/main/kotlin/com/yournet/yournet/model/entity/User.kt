@@ -39,6 +39,17 @@ class User(
     @Column(nullable = true)
     var registeredIP: String? = null,
 
+    @Column(nullable = true)
+    @JsonBackReference
+    @OneToMany(mappedBy = "user")
+    var post: MutableList<Post> = mutableListOf(),
+
+    @Column(nullable = true)
+    @JsonBackReference
+    @OneToMany(mappedBy = "user")
+    var userScoreHashTag: MutableList<UserScoreHashTag> = mutableListOf(),
+
+
 ) : BaseEntity() {
 
     init {

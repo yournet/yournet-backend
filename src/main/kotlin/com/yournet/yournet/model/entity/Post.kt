@@ -28,7 +28,13 @@ class Post(
     @JsonManagedReference
     @JoinColumn(name = "user_id")
     var user: User?,
-    //TODO: like 기능 추가
+
+
+    @Column
+    var likeCount: Int = 0,
+
+    @OneToMany(mappedBy = "post")
+    var like: MutableList<Like>? = mutableListOf(),
 
 ):BaseEntity() {
 }

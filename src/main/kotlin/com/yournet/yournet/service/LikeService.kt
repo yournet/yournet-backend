@@ -15,11 +15,12 @@ class LikeService(
 ) {
 
     fun createLike(body: LikeRequestDto, jwt: String): LikeResponseDto {
-        val userId = userService.getValidUser(jwt)
-        if (userId != null) {
+        val user = userService.getValidUser(jwt)
+        val post = postService.getValidPost(body.postId)
+        if (user != null) {
             val like = Like(
-                userId = userId.userId,
-                postId = body.postId
+                user = user,
+                post = post
             )
             val savedLike = likeRepository.save(like)
 
@@ -29,7 +30,7 @@ class LikeService(
             findPost.postHashtag?.forEach { hashtag ->
                 userScoreHashTagService.updateScoreOnLike(jwt, hashtag.hashTag.hashTagName)
             }
-            return LikeResponseDto(savedLike.likeId, savedLike.userId, savedLike.postId)
+            return LikeResponseDto(savedLike.likeId, savedLike.user.userId, savedLike.post.postId)
         }
         throw Exception("Invalid reqeust")
     }

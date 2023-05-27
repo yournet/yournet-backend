@@ -1,10 +1,7 @@
 package com.yournet.yournet.model.entity
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.Table
+import com.fasterxml.jackson.annotation.JsonBackReference
+import javax.persistence.*
 
 @Entity
 @Table(name="post_like")
@@ -12,8 +9,17 @@ class Like(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val likeId: Int,
-    val userId: Int,
-    val postId: Int
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    var user: User,
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    @JsonBackReference
+    var post: Post,
 ):BaseEntity() {
-    constructor(userId: Int, postId: Int): this(0, userId, postId)
+    constructor(user: User, post: Post):this(0,user,post)
 }

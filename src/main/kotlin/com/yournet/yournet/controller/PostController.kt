@@ -38,8 +38,7 @@ class PostController(
     @PostMapping("post")
     fun writePost(
         @Parameter(description = "게시글 작성 정보", required = true) @RequestBody body: PostWriteRequestDto,
-        @RequestHeader("Authorization") jwt: String,
-        request: HttpServletRequest
+        @RequestHeader("Authorization") jwt: String
     ): ResponseEntity<PostResponseDto> {
 
         return ResponseEntity.ok(postService.savePost(body, jwt))
