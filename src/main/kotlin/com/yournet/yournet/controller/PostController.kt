@@ -10,16 +10,9 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import org.pcap4j.core.*
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import pcap.spi.*
-import pcap.spi.exception.ErrorException
-import pcap.spi.exception.error.BreakException
-import pcap.spi.option.DefaultLiveOptions
-import java.io.BufferedReader
-import java.net.http.HttpRequest
 import javax.servlet.http.HttpServletRequest
 
 
@@ -52,7 +45,7 @@ class PostController(
         return ResponseEntity.ok(postService.savePost(body, jwt))
     }
 
-
+    //게시물 한개만 가져오는거임
     // 특정 게시글 가져오기 API
     @Operation(summary = "특정 게시글 가져오기 API")
     @ApiResponses(
