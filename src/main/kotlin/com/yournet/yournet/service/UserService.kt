@@ -1,6 +1,7 @@
 package com.yournet.yournet.service
 
 
+import com.petition.petition.model.payload.auth.response.JwtResponseDto
 import com.yournet.yournet.common.exception.InvalidUserException
 import com.yournet.yournet.common.exception.UnauthenticatedException
 import com.yournet.yournet.model.entity.User
@@ -77,14 +78,21 @@ class UserService(
         return findByEmail(body.issuer)
     }
 
-    fun login(body:LoginRequestDto,response: HttpServletResponse){
+    //jwt 반영
+    fun login(body:LoginRequestDto,response: HttpServletResponse): JwtResponseDto{
         //유효한 유저인지 검증하는 로직
         //TODO: 숭실대 학생인지 검증하는 로직 추가 필요
         checkValidUser(body)
         //JWT 생성
         val jwt = generateJwt(body)
+        val findUser = getValidUser(jwt)
 
+        val responseDto = JwtResponseDto(
+            jwt=jwt,
+            userId = findUser?.userId
+        )
         //JWT를 저장
         response.addHeader("Authorization", "$jwt")
+        return responseDto
     }
 }

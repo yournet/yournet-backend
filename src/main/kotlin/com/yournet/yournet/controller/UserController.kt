@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @RestController
-class UserController(
+class  UserController(
     private val userService: UserService
 ) {
     @PostMapping("user/register")
@@ -34,8 +34,8 @@ class UserController(
     }
 
     @PostMapping("user/login")
-    fun login(@RequestBody body: LoginRequestDto, response: HttpServletResponse): ResponseEntity<Any> {
-        userService.login(body,response)
-        return ResponseEntity.ok("success")
+    fun login(@RequestBody body: LoginRequestDto, response: HttpServletResponse): ResponseEntity<*> {
+        val jwtReturn = userService.login(body, response)
+        return ResponseEntity.ok(jwtReturn)
     }
 }
